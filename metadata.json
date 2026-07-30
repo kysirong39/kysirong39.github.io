@@ -1,0 +1,6 @@
+{
+  "name": "BankFraud Graph Intelligence",
+  "description": "Hệ thống phân tích & trực quan hóa Knowledge Graph phát hiện nhóm khách hàng gian lận liên quan (Fraud Rings), chấm điểm rủi ro và truy vấn Cypher trong Ngân hàng.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
