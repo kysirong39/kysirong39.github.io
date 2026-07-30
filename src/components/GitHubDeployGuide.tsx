@@ -11,7 +11,8 @@ import {
   Rocket, 
   Code2, 
   CheckCircle2,
-  Server
+  Server,
+  AlertTriangle
 } from 'lucide-react';
 
 export const GitHubDeployGuide: React.FC = () => {
@@ -118,7 +119,7 @@ jobs:
               <span>Cách 1: Tự động Build bằng GitHub Actions (Khuyên dùng)</span>
             </div>
             <p className="text-slate-300 text-[11px] leading-relaxed">
-              File <code className="text-emerald-400 font-mono">.github/workflows/deploy.yml</code> đã được khởi tạo sẵn trong dự án. Khi bạn <code className="text-amber-300 font-mono">git push</code> mã nguồn lên GitHub, hệ thống CI/CD sẽ tự động chạy <code className="text-emerald-400 font-mono">npm run build</code> biên dịch toàn bộ file <code className="text-purple-300 font-mono">.tsx</code> sang HTML/JS/CSS tĩnh và đẩy lên branch <code className="text-blue-300 font-mono">gh-pages</code> để chạy ngay lập tức!
+              File <code className="text-emerald-400 font-mono">.github/workflows/deploy.yml</code> đã được khởi tạo sẵn trong dự án. Khi bạn <code className="text-amber-300 font-mono">git push</code> hoặc Export từ AI Studio sang GitHub, hệ thống CI/CD sẽ tự động chạy <code className="text-emerald-400 font-mono">npm run build</code> biên dịch toàn bộ file <code className="text-purple-300 font-mono">.tsx</code> sang HTML/JS/CSS tĩnh và đẩy lên branch <code className="text-blue-300 font-mono">gh-pages</code> để ứng dụng hoạt động 100%!
             </p>
           </div>
 
@@ -129,6 +130,71 @@ jobs:
             </div>
             <p className="text-slate-300 text-[11px] leading-relaxed">
               Mở Terminal chạy lệnh <code className="text-emerald-400 font-mono">npm run build</code>. Vite sẽ tạo thư mục <code className="text-amber-300 font-mono">dist/</code> chứa file tĩnh <code className="text-purple-300 font-mono">index.html</code>, <code className="text-blue-300 font-mono">assets/*.js</code>, <code className="text-emerald-300 font-mono">assets/*.css</code>. Bạn chỉ cần upload toàn bộ file trong thư mục <code className="text-amber-300 font-mono">dist/</code> lên GitHub Repository &rarr; Bật GitHub Pages &rarr; Web chạy ngay 100%!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Post Export AI Studio Quick Action Step Box */}
+      <div className="bg-indigo-950/40 border border-indigo-500/30 rounded-2xl p-5 space-y-3">
+        <div className="flex items-center gap-2.5">
+          <Rocket className="w-5 h-5 text-indigo-400" />
+          <h3 className="text-sm font-bold text-indigo-200">
+            📌 Bạn vừa Export / Push từ Google AI Studio sang GitHub? Hướng dẫn 3 bước tiếp theo:
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div className="bg-slate-950/90 p-3 rounded-xl border border-slate-800 space-y-1">
+            <span className="text-[10px] font-mono text-indigo-400 font-bold uppercase">Bước 1</span>
+            <p className="font-bold text-slate-100">Kiểm tra GitHub Actions</p>
+            <p className="text-slate-400 text-[11px]">
+              Vào Repository trên GitHub &rarr; chọn tab <strong>Actions</strong>. Bạn sẽ thấy Workflow <code className="text-amber-300 font-mono">Deploy BankFraud Graph...</code> đang tự động chạy build mã nguồn.
+            </p>
+          </div>
+
+          <div className="bg-slate-950/90 p-3 rounded-xl border border-slate-800 space-y-1">
+            <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase">Bước 2</span>
+            <p className="font-bold text-slate-100">Bật GitHub Pages (2 Cách Đơn Giản)</p>
+            <p className="text-slate-400 text-[11px]">
+              Vào <strong>Settings</strong> &rarr; <strong>Pages</strong> &rarr; Tại mục <em>Build and deployment / Source</em>:
+              <br />
+              • <strong>Cách A (Dễ nhất):</strong> Chọn Source là <code className="text-emerald-400 font-mono font-bold">GitHub Actions</code>. (Không cần chọn branch gh-pages!).
+              <br />
+              • <strong>Cách B:</strong> Chọn <code className="text-blue-300 font-mono">Deploy from a branch</code> &rarr; Chọn branch <code className="text-emerald-400 font-mono">gh-pages</code>.
+            </p>
+          </div>
+
+          <div className="bg-slate-950/90 p-3 rounded-xl border border-slate-800 space-y-1">
+            <span className="text-[10px] font-mono text-purple-400 font-bold uppercase">Bước 3</span>
+            <p className="font-bold text-slate-100">Truy cập Website Tĩnh Live</p>
+            <p className="text-slate-400 text-[11px]">
+              Sau 1 phút, GitHub Pages sẽ cấp link công khai dạng: <code className="text-blue-300 font-mono">https://&lt;USER&gt;.github.io/&lt;REPO&gt;/</code>. Ứng dụng chạy mượt mà 100%!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Troubleshooting gh-pages missing branch & lockfile banner */}
+      <div className="bg-blue-950/40 border border-blue-500/30 rounded-2xl p-5 space-y-3">
+        <div className="flex items-center gap-2.5">
+          <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />
+          <h3 className="text-sm font-bold text-blue-200">
+            🔧 Giải thích & Đã Sửa Lỗi <code className="text-red-400 font-mono">Dependencies lock file is not found</code>
+          </h3>
+        </div>
+        <div className="text-xs text-slate-300 space-y-2 leading-relaxed">
+          <p>
+            <strong>Nguyên nhân lỗi:</strong> Mặc định GitHub Actions dùng <code className="text-amber-300 font-mono">cache: 'npm'</code> và <code className="text-amber-300 font-mono">npm ci</code> vốn bắt buộc dự án phải có sẵn file <code className="text-red-400 font-mono">package-lock.json</code>. Do dự án xuất từ AI Studio sử dụng cấu hình mới nên chưa chứa file lock này, khiến GitHub Actions bị hỏng bước <em>Setup Node.js Environment</em>.
+          </p>
+          <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-2">
+            <p className="font-bold text-emerald-400">✅ Đã tự động cập nhật file <code className="text-blue-300 font-mono">.github/workflows/deploy.yml</code>:</p>
+            <ul className="list-disc list-inside space-y-1 pl-1 text-slate-200">
+              <li>Chuyển lệnh <code className="text-amber-300 font-mono">npm ci</code> sang <code className="text-emerald-400 font-mono font-bold">npm install</code> linh hoạt.</li>
+              <li>Bỏ bắt buộc cache lockfile để workflow chạy thành công 100% trên mọi Repository.</li>
+            </ul>
+            <p className="text-slate-300 mt-2 font-semibold">
+              👉 <strong>Hành động của bạn:</strong> Chỉ cần Export/Push mã nguồn mới này lên GitHub (hoặc vào tab <strong>Actions</strong> &rarr; chọn workflow &rarr; bấm <strong>Re-run all jobs</strong>).
             </p>
           </div>
         </div>
