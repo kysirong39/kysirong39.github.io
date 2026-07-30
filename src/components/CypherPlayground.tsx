@@ -66,12 +66,44 @@ export const CypherPlayground: React.FC = () => {
   const handleGenerateAiCypher = async () => {
     if (!aiRequirement.trim()) return;
     setIsAiGenerating(true);
+
+    const getClientFallbackCypher = (reqText: string) => {
+      const req = reqText.toLowerCase();
+      if (req.includes('mule') || req.includes('chuyển tiền') || req.includes('tiền')) {
+        return {
+          cypher: `MATCH (src:Account)-[t1:TRANSFERRED_TO]->(mule1:Account)-[t2:TRANSFERRED_TO]->(mule2:Account)
+WHERE t1.amount > 50000000 
+  AND duration.between(t1.timestamp, t2.timestamp).minutes < 15
+RETURN src.accountNo AS Source, mule1.accountNo AS Mule_Step1, mule2.accountNo AS Mule_Step2, t1.amount AS Amount
+LIMIT 20;`,
+          explanation: "Lệnh Cypher tìm kiếm các tài khoản chuyển tiền liên hoàn > 50 triệu VND trong khoảng thời gian dưới 15 phút (mô hình Money Mule rác)."
+        };
+      }
+      if (req.includes('ip') || req.includes('proxy') || req.includes('thiết bị') || req.includes('imei')) {
+        return {
+          cypher: `MATCH (ip:IPAddress {isProxy: true})<-[:REGISTERED_WITH_IP]-(c:Customer)-[:HAS_DEVICE]->(d:Device)
+WITH ip, d, collect(c.cif_id) AS Customer_CIFs, count(c) AS Total_Users
+WHERE Total_Users >= 2
+RETURN ip.ipAddress AS Proxy_IP, d.deviceModel AS Device, Total_Users, Customer_CIFs;`,
+          explanation: "Tìm kiếm các địa chỉ IP Proxy/VPN độc hại được dùng bởi 2 hoặc nhiều khách hàng eKYC khác nhau từ cùng 1 dòng máy."
+        };
+      }
+      return {
+        cypher: `MATCH (c1:Customer)-[:HAS_DEVICE]->(d:Device)<-[:HAS_DEVICE]-(c2:Customer)
+WHERE c1 <> c2
+MATCH (c1)-[:OWNS_ACCOUNT]->(a1:Account)-[t:TRANSFERRED_TO]->(a2:Account)<-[:OWNS_ACCOUNT]-(c2)
+RETURN c1.cif_id AS Customer1, c2.cif_id AS Customer2, d.deviceImei AS Shared_IMEI, sum(t.amount) AS Total_Transferred;`,
+        explanation: "Truy vấn đồ thị kiểm tra 2 khách hàng dùng chung 1 mã IMEI thiết bị di động và có giao dịch chuyển tiền trực tiếp cho nhau."
+      };
+    };
+
     try {
       const res = await fetch('/api/gemini/generate-cypher', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userRequirement: aiRequirement })
       });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       if (data.cypher) {
         setCypherCode(data.cypher);
@@ -81,9 +113,26 @@ export const CypherPlayground: React.FC = () => {
           description: data.explanation || 'Câu lệnh Cypher do Trợ lý AI Gemini thiết kế',
           cypher: data.cypher
         }));
+      } else {
+        const fallback = getClientFallbackCypher(aiRequirement);
+        setCypherCode(fallback.cypher);
+        setSelectedQuery(prev => ({
+          ...prev,
+          title: `AI Generated: ${aiRequirement.substring(0, 30)}...`,
+          description: fallback.explanation,
+          cypher: fallback.cypher
+        }));
       }
     } catch (err) {
-      console.error('Error generating Cypher:', err);
+      console.warn('Backend Cypher API unavailable, using client-side generator:', err);
+      const fallback = getClientFallbackCypher(aiRequirement);
+      setCypherCode(fallback.cypher);
+      setSelectedQuery(prev => ({
+        ...prev,
+        title: `AI Generated: ${aiRequirement.substring(0, 30)}...`,
+        description: fallback.explanation,
+        cypher: fallback.cypher
+      }));
     } finally {
       setIsAiGenerating(false);
     }

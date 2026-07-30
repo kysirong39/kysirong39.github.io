@@ -95,6 +95,45 @@ jobs:
         </div>
       </div>
 
+      {/* Static Web Conversion Alert Banner */}
+      <div className="bg-amber-950/40 border border-amber-500/30 rounded-2xl p-5 space-y-3">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-amber-500/20 text-amber-400 rounded-xl border border-amber-500/30 shrink-0">
+            <Zap className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-sm font-bold text-amber-200">
+              💡 Giải Thích Về Việc Đẩy Web Tĩnh (Static HTML/JS/CSS) Lên GitHub Pages
+            </h3>
+            <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
+              Trình duyệt web <strong>không thể chạy trực tiếp file `.tsx`</strong>. Để ứng dụng hiển thị hoàn hảo trên GitHub Pages (chỉ hỗ trợ web tĩnh), ứng dụng cần được <strong>Vite đóng gói (build)</strong> thành bộ mã nguồn web tĩnh thuần gồm: <code className="text-amber-300 font-mono">index.html</code>, các file <code className="text-emerald-400 font-mono">.js</code> và <code className="text-blue-300 font-mono">.css</code> trong thư mục <code className="text-purple-300 font-mono">dist/</code>.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+          <div className="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 text-xs space-y-1.5">
+            <div className="font-bold text-blue-400 flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4" />
+              <span>Cách 1: Tự động Build bằng GitHub Actions (Khuyên dùng)</span>
+            </div>
+            <p className="text-slate-300 text-[11px] leading-relaxed">
+              File <code className="text-emerald-400 font-mono">.github/workflows/deploy.yml</code> đã được khởi tạo sẵn trong dự án. Khi bạn <code className="text-amber-300 font-mono">git push</code> mã nguồn lên GitHub, hệ thống CI/CD sẽ tự động chạy <code className="text-emerald-400 font-mono">npm run build</code> biên dịch toàn bộ file <code className="text-purple-300 font-mono">.tsx</code> sang HTML/JS/CSS tĩnh và đẩy lên branch <code className="text-blue-300 font-mono">gh-pages</code> để chạy ngay lập tức!
+            </p>
+          </div>
+
+          <div className="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 text-xs space-y-1.5">
+            <div className="font-bold text-emerald-400 flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4" />
+              <span>Cách 2: Build Thủ Công tại máy & Upload thư mục dist/ tĩnh</span>
+            </div>
+            <p className="text-slate-300 text-[11px] leading-relaxed">
+              Mở Terminal chạy lệnh <code className="text-emerald-400 font-mono">npm run build</code>. Vite sẽ tạo thư mục <code className="text-amber-300 font-mono">dist/</code> chứa file tĩnh <code className="text-purple-300 font-mono">index.html</code>, <code className="text-blue-300 font-mono">assets/*.js</code>, <code className="text-emerald-300 font-mono">assets/*.css</code>. Bạn chỉ cần upload toàn bộ file trong thư mục <code className="text-amber-300 font-mono">dist/</code> lên GitHub Repository &rarr; Bật GitHub Pages &rarr; Web chạy ngay 100%!
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* 4 Steps Guide Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         
